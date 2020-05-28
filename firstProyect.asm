@@ -1,3 +1,35 @@
+%macro escribe 2
+mov eax, 4
+mov ebx, 1
+mov ecx, %1
+mov edx, %2
+int 0x80
+%endmacro
+
+%macro leeTxt 3
+	mov eax, 3
+	mov ebx, %1
+	mov ecx, %2
+	mov edx, %3
+	int 0x80
+%endmacro
+%macro escribeTxt 3
+	mov eax, 4
+	mov ebx, %1
+	mov ecx, %2
+	mov edx, %3
+	int 0x80
+%endmacro
+%macro cerrarArchivo 1
+	mov eax, 6
+	mov ebx, %1
+	mov ecx, 0
+	mov edx, 0
+	int 0x80
+%endmacro
+
+
+
 section .data 
 	msg	db "Hola, Mundo!!!",0x0A
 	len equ $ - msg 
@@ -19,11 +51,7 @@ _start:
 		mov [width],eax
 
 	   ;saludamos al mundo
-	   mov eax, 4		
-	   mov ebx, 1		
-	   mov ecx, msg		
-	   mov edx, len		
-	   int 0x80		
+	   escribe msg,len
 	   
 	   ; inciiamos el ciclo 
 
@@ -35,7 +63,6 @@ _start:
 	   		;comienzo del ciclo for 
 	   		mov eax,[width]
 	   		sub eax,ecx
-	   		;mov eax,ecx
 		    add eax,'0'
 		    mov [num],eax
 		    add ecx, '0'
@@ -49,11 +76,16 @@ _start:
 		    mov ecx, 10
 		    loop_columna
 		    	mov [temp2],ecx
-		    	mov eax, 4
-		    	mov ebx,1
-		    	mov ecx, aster 
-		    	mov edx,lenAster
-		    	int 0x80
+
+
+		    	;*********************************************codigo ejecutable en el loop****************************
+		    	escribe aster,lenAster
+
+
+
+
+
+
 		    	mov ecx,[temp2]
 		    	loop loop_columna
 
