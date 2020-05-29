@@ -36,7 +36,6 @@ int 0x80
 %endmacro
 
 
-
 section .data 
 	msg	db "Hola, Mundo!!!",0x0A
 	len equ $ - msg 
@@ -52,6 +51,16 @@ section .bss
 	temp resb 10
 	num2 resb 10
 	temp2 resb 10 
+	;variables de lectura del archivo
+	ant0 resb 3 
+	ant1 resb 3
+	ant2 resb 3
+	datoleft resb 3
+	dato	resb 3
+	datoRight resb 3
+	sig0 resb 3
+	sig1 resb 3
+	sig2 resb 3
 	;variables para el sharpening
 	mat00 resb 3
 	mat01 resb 3
@@ -62,10 +71,11 @@ section .bss
 	mat20 resb 3
 	mat21 resb 3
 	mat22 resb 3
+	mat23 resb 3		;nota si borro esta reserva de memoria se encicla Razon: ni idea 
 	;variables para el uso de los loop_fila
 	width resb 6
 	height resb 6
-	texto resb 4
+	texto resb 3
 	idarchivo resd 1
 	idarchivo2 resd 1
 	idpointer resd 1
@@ -76,7 +86,7 @@ section .text
 	global _start       
 _start:		    
 
-		
+		;*********************************en esta seccion cargamos los archivos que vamos a leer o escribir*********************
 		abrirArchivo 8,archivo2    ;ponemos modo edicion y archivo destino; carga el archivo o lo crea
 		test eax, eax
 		jz salir
@@ -102,13 +112,71 @@ _start:
 		jz salir
 		mov dword[idpointerPrev], eax
 
-		mov eax, 10
+
+
+		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		;
+		;						agregar lecturas de pantalla teclado en esta seccion
+		;
+		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		mov eax, 4
 		mov [width],eax
-		mov eax,10
+		mov eax,4
 		mov [height],eax
+
+		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		;
+		;						cargamos el kernel sharpen
+		;
+		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		mov eax,-1
+		mov [mat00],eax
+		
+		mov eax,-2
+		mov [mat01],eax
+
+		mov eax,-1,
+		mov [mat02],eax
+
+		mov eax,0
+		mov [mat10],eax
+
+		mov eax,0
+		mov [mat11],eax
+
+		mov eax,0
+		mov [mat12],eax
+
+		mov eax,1
+		mov [mat20],eax
+
+		mov eax,2
+		mov [mat21],eax
+
+		mov eax,1
+		mov [mat22],eax
+
 	   ;saludamos al mundo
 	   escribe msg,len
 	   
+		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		;
+		;						vamos a llenar el buffer
+		;
+		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		mov ecx,[width]
+		ciclollenadoBuffer
+			mov [temp],ecx
+			;***********************code here***********************
+			leeTxt [idpointerNext],texto,3
+			
+
+			escribe texto, 3
+			mov ecx, [temp]
+		    dec ecx
+	   	jnz ciclollenadoBuffer
+
+
 	   ; inciiamos el ciclo 
 
 	   mov eax, 0
@@ -123,7 +191,7 @@ _start:
 		    add eax,'0'
 		    mov [num],eax
 		    escribe num,10
-		    escribeTxt [idarchivo],num,10
+		    ;escribeTxt [idarchivo],num,10
 		    ;add ecx, '0'
 		    
 		    ;mov eax, 4
@@ -139,7 +207,6 @@ _start:
 
 		    	;*********************************************codigo ejecutable en el loop****************************
 		    	escribe aster,lenAster
-
 		    	escribeTxt [idarchivo],aster,lenAster
 				;escribe texto, 4
 
