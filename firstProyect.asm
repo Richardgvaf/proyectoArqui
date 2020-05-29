@@ -34,11 +34,19 @@ int 0x80
 	mov edx, 0
 	int 0x80
 %endmacro
-
+%macro actualizarpuntero 3
+	mov eax,19
+	mov ebx,[%1]
+	mov ecx,%2
+	mov edx,%3
+	int 0x80
+%endmacro
 
 section .data 
 	msg	db "Hola, Mundo!!!",0x0A
 	len equ $ - msg 
+	msg2	db ",",0x0A
+	len2 equ $ - msg2 
 	aster db "*"
 	lenAster equ $ - aster
 	archivo db "/home/richard/ensamblador/archivo.txt",0
@@ -47,10 +55,11 @@ section .data
 
 
 section .bss
-	num resb 10
-	temp resb 10
-	num2 resb 10
-	temp2 resb 10 
+	num resb 8
+	temp resb 8
+	num2 resb 8
+	temp2 resb 8 
+	readpointer resb 4
 	;variables de lectura del archivo
 	ant0 resb 3 
 	ant1 resb 3
@@ -76,11 +85,11 @@ section .bss
 	width resb 6
 	height resb 6
 	texto resb 3
-	idarchivo resd 1
-	idarchivo2 resd 1
-	idpointer resd 1
-	idpointerNext resd 1
-	idpointerPrev resd 1
+	idarchivo resd 4
+	idarchivo2 resd 4
+	idpointer resd 4
+	;idpointerNext resd 4
+	;idpointerPrev resd 4
 
 section .text
 	global _start       
@@ -102,15 +111,25 @@ _start:
 		jz salir
 		mov dword[idpointer], eax
 
-		abrirArchivo 5,archivoLectura    ;ponemos modo edicion y archivo destino; carga el archivo o lo crea
-		test eax, eax
-		jz salir
-		mov dword[idpointerNext], eax
+		;abrirArchivo 5,archivoLectura    ;ponemos modo edicion y archivo destino; carga el archivo o lo crea
+		;test eax, eax
+		;jz salir
+		;mov dword[idpointerNext], eax
 
-		abrirArchivo 5,archivoLectura    ;ponemos modo edicion y archivo destino; carga el archivo o lo crea
-		test eax, eax
-		jz salir
-		mov dword[idpointerPrev], eax
+		;abrirArchivo 5,archivoLectura    ;ponemos modo edicion y archivo destino; carga el archivo o lo crea
+		;test eax, eax
+		;jz salir
+		;mov dword[idpointerPrev], eax
+
+
+
+
+		mov eax,'0'
+		mov [sig0],eax
+		mov eax,'0'
+		mov [sig1],eax
+		mov eax,'0'
+		mov [sig2],eax
 
 
 
@@ -164,26 +183,33 @@ _start:
 		;						vamos a llenar el buffer
 		;
 		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		mov ecx,[width]
-		ciclollenadoBuffer
-			mov [temp],ecx
-			;***********************code here***********************
-			leeTxt [idpointerNext],texto,3
-			
+		;mov ecx,[width]
+		;ciclollenadoBuffer
+		
+	   	mov eax,20
+	   	mov [readpointer],eax
+	   	
 
-			escribe texto, 3
-			mov ecx, [temp]
-		    dec ecx
-	   	jnz ciclollenadoBuffer
+	   	actualizarpuntero idpointer,[readpointer], 0
+	   	leeTxt [idpointer],texto,3
+	   	escribe texto,3
 
 
+
+
+
+	   	escribe msg,len
+	   	escribe msg,len
+	   	escribe [sig1],3
+	   	escribe msg,len
+	   	escribe msg,len
 	   ; inciiamos el ciclo 
 
 	   mov eax, 0
 	   mov ebx, 10
 	   mov ecx, [height]
 
-	   loop_fila
+	   loop_fila:
 	   		;comienzo del ciclo for 
 	   		mov [temp],ecx
 	   		mov eax,[height]
@@ -191,17 +217,10 @@ _start:
 		    add eax,'0'
 		    mov [num],eax
 		    escribe num,10
-		    ;escribeTxt [idarchivo],num,10
-		    ;add ecx, '0'
-		    
-		    ;mov eax, 4
-		    ;mov ebx,1
-		    ;mov ecx, num 
-		    ;mov edx,10
-		    ;int 0x80
+		   
 
 		    mov ecx, [width]
-		    loop_columna
+		    loop_columna:
 		    	mov [temp2],ecx
 
 
