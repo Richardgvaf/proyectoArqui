@@ -48,6 +48,8 @@ section .data
 	msg2	db ",",0x0A
 	len2 equ $ - msg2 
 	aster db "*"
+	msgcolumna0 db "Estoy en la columna 0",0x0A
+	lencolumna0 db $ - msgcolumna0
 	lenAster equ $ - aster
 	archivo db "/home/richard/ensamblador/archivo.txt",0
 	archivo2 db "/home/richard/ensamblador/archivo2.txt",0
@@ -227,6 +229,17 @@ _start:
 		    	;*********************************************codigo ejecutable en el loop****************************
 		    	escribe aster,lenAster
 		    	escribeTxt [idarchivo],aster,lenAster
+		    	
+		    	;*********************************************condiciones para el calculo ****************************
+		    	;if( i == 0 and j == 0)
+		    	mov ebx,[width]					;como se reccorre de atras hacia adelante necesto restar el total, para saber la posicion exacta
+		    	mov ecx,[temp2]					;restamos para saber la posicion en la que se encuentra del ancho
+		    	cmp ebx,ecx
+		    	jnz NoFilaCero
+		    		; si es cero continuamos los condicionales
+		    		escribe msgcolumna0,lencolumna0
+
+		    	NoFilaCero:
 				;escribe texto, 4
 
 				;escribeTxt [idarchivo],texto,3
