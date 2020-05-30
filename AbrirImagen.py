@@ -6,12 +6,15 @@
 #https://pypi.org/project/opencv-python/
 #https://www.w3schools.com/python/python_file_write.asp
 #***************************************************************************************************************************
-import numpy as np #  												#importamos numpy
-import math #														#importamos librerìa matematica
-import cv2	#														#importamos la libreria opencv
-from PIL import Image # 												#importamos el modulo para leer y cargar la imagen
-image = Image.open("imagenPrueba.bmp") #								#cargamos la imagen para leer los pixeles		
-img = cv2.imread('imagenPrueba.bmp') #								#cargamos la imagen con cv2 para obtener las dimensiones
+import numpy as np  												#importamos numpy
+import math 														#importamos librerìa matematica
+import cv2															#importamos la libreria opencv
+from PIL import Image  												#importamos el modulo para leer y cargar la imagen
+print("Digite el nombre(si se ubica en el directorio de ejecucion) o ruta de la imagen")	#solicitamos el nombre de la imagen
+nombreImg = input()													#capturamos en nombreImg el nombre de la imagen digitada						
+
+image = Image.open(nombreImg) 										#cargamos la imagen para leer los pixeles		
+img = cv2.imread(nombreImg) 										#cargamos la imagen con cv2 para obtener las dimensiones
 height, width, channels = img.shape									#obtenemos las dimensiones alto,ancho y la cantidad de canales por pixel
 print("ancho: ", width)												#alertamos al usuario el ancho de la imagen para la siguiente etapa
 print("alto: ",height)												#alertamos al usuario el alto de la imagen para la siguiente etapa
