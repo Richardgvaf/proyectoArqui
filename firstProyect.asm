@@ -47,20 +47,24 @@ section .data
 	len equ $ - msg 
 	msg2	db ",",0x0A
 	len2 equ $ - msg2 
-	aster db "*"
-	msgcolumna0 db "Estoy en la columna 0",0x0A
-	lencolumna0 db $ - msgcolumna0
+	aster db "*",0x0A
 	lenAster equ $ - aster
+	msgcolumna0 db "Estoy en la columna 0",0x0A
+	lencolumna0 equ $ - msgcolumna0
+	
 	archivo db "/home/richard/ensamblador/archivo.txt",0
 	archivo2 db "/home/richard/ensamblador/archivo2.txt",0
 	archivoLectura db "/home/richard/ensamblador/archivoLectura.txt",0
 
 
 section .bss
-	num resb 8
+	;num resb 8
 	temp resb 8
-	num2 resb 8
+	;num2 resb 8
 	temp2 resb 8 
+	prueba resb 8
+	posI   resb 8
+	posJ   resb 8
 	readpointer resb 4
 	;variables de lectura del archivo
 	ant0 resb 3 
@@ -135,15 +139,7 @@ _start:
 
 
 
-		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		;
-		;						agregar lecturas de pantalla teclado en esta seccion
-		;
-		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		mov eax, 4
-		mov [width],eax
-		mov eax,4
-		mov [height],eax
+		
 
 		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		;
@@ -205,8 +201,19 @@ _start:
 	   	escribe [sig1],3
 	   	escribe msg,len
 	   	escribe msg,len
-	   ; inciiamos el ciclo 
+	    
 
+	   ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		;
+		;						agregar lecturas de pantalla teclado en esta seccion
+		;
+		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		mov eax, 4
+		mov [width],eax
+		mov eax,4
+		mov [height],eax
+
+		; inciiamos el ciclo
 	   mov eax, 0
 	   mov ebx, 10
 	   mov ecx, [height]
@@ -217,9 +224,9 @@ _start:
 	   		mov eax,[height]
 	   		sub eax,ecx
 		    add eax,'0'
-		    mov [num],eax
-		    escribe num,10
-		   
+		    mov [posI],eax
+		    escribe posI,8
+		   	
 
 		    mov ecx, [width]
 		    loop_columna:
@@ -227,17 +234,36 @@ _start:
 
 
 		    	;*********************************************codigo ejecutable en el loop****************************
-		    	escribe aster,lenAster
-		    	escribeTxt [idarchivo],aster,lenAster
+		    	;escribe aster,lenAster
+		    	;escribeTxt [idarchivo],aster,lenAster
 		    	
 		    	;*********************************************condiciones para el calculo ****************************
 		    	;if( i == 0 and j == 0)
-		    	mov ebx,[width]					;como se reccorre de atras hacia adelante necesto restar el total, para saber la posicion exacta
-		    	mov ecx,[temp2]					;restamos para saber la posicion en la que se encuentra del ancho
+		    	mov ebx,[width]
+		    	mov ecx,[temp2]
+		    	escribe msg2,len2
+		    	escribe msg2,len2
+		    	escribe msg2,len2
+		    	mov ebx,[temp2]
+		    	add ebx,'0'
+		    	mov [prueba],ebx
+		   		escribe prueba,8
+		   		mov eax,[width]
+		    	add eax,'0'
+		    	mov [prueba],eax
+		   		escribe prueba,8
+		   		escribe msg2,len2
+		   		escribe msg2,len2
+		   		escribe msg2,len2
+
+		   		mov ebx,[temp2]
+		   		mov ecx,[width]
+
 		    	cmp ebx,ecx
 		    	jnz NoFilaCero
 		    		; si es cero continuamos los condicionales
 		    		escribe msgcolumna0,lencolumna0
+
 
 		    	NoFilaCero:
 				;escribe texto, 4
