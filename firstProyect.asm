@@ -43,22 +43,37 @@ int 0x80
 %endmacro
 
 section .data 
+	;*************************************************mensajes*********************************************
 	msg	db "Hola, Mundo!!!",0x0A
 	len equ $ - msg 
 	msg2	db ",",0x0A
 	len2 equ $ - msg2 
 	aster db "*",0x0A
 	lenAster equ $ - aster
-	msgcolumna0 db "Estoy en la columna 0",0x0A
-	lencolumna0 equ $ - msgcolumna0
-	
+	msgColumna0 db "Estoy en la columna 0",0x0A
+	lenMsgColumna0 equ $ - msgColumna0
+	msgColumnaFinal db "Estoy en la columna final",0x0A
+	lenMsgColumnaFinal equ $ - msgColumnaFinal
+	msgColumnaIntermedia db "Estoy en la columna intermedia",0x0A
+	lenMsgColumnaIntermedia equ $ - msgColumnaIntermedia	
+
+	msgFila0 db "Estoy en la fila 0",0x0A
+	lenMsgFila0 equ $ - msgFila0
+	msgFilaFinal db "Estoy en la fila final",0x0A
+	lenMsgFilaFinal equ $ - msgFilaFinal
+	msgFilaIntermedia db "Estoy en la fila intermedia",0x0A
+	lenMsgFilaIntermedia equ $ - msgFilaIntermedia
+
+
+
+	;*****************************************nombre de archivos******************************************
 	archivo db "/home/richard/ensamblador/archivo.txt",0
 	archivo2 db "/home/richard/ensamblador/archivo2.txt",0
 	archivoLectura db "/home/richard/ensamblador/archivoLectura.txt",0
 
 
 section .bss
-	;num resb 8
+	sumatoria resb 8
 	temp resb 8
 	;num2 resb 8
 	temp2 resb 8 
@@ -178,7 +193,7 @@ _start:
 	   
 		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		;
-		;						vamos a llenar el buffer
+		;						
 		;
 		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		;mov ecx,[width]
@@ -186,8 +201,6 @@ _start:
 		
 	   	mov eax,20
 	   	mov [readpointer],eax
-	   	
-
 	   	actualizarpuntero idpointer,[readpointer], 0
 	   	leeTxt [idpointer],texto,3
 	   	escribe texto,3
@@ -210,7 +223,7 @@ _start:
 		;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		mov eax, 4
 		mov [width],eax
-		mov eax,4
+		mov eax,3
 		mov [height],eax
 
 		; inciiamos el ciclo
@@ -223,55 +236,142 @@ _start:
 	   		mov [temp],ecx
 	   		mov eax,[height]
 	   		sub eax,ecx
-		    add eax,'0'
+		    ;add eax,'0'
 		    mov [posI],eax
-		    escribe posI,8
+		    ;escribe posI,8
 		   	
 
 		    mov ecx, [width]
 		    loop_columna:
 		    	mov [temp2],ecx
-
+		    	mov eax,[width]
+		    	sub eax,ecx
+		    	mov [posJ],eax
 
 		    	;*********************************************codigo ejecutable en el loop****************************
 		    	;escribe aster,lenAster
 		    	;escribeTxt [idarchivo],aster,lenAster
 		    	
 		    	;*********************************************condiciones para el calculo ****************************
-		    	;if( i == 0 and j == 0)
-		    	mov ebx,[width]
-		    	mov ecx,[temp2]
+		    	
 		    	escribe msg2,len2
 		    	escribe msg2,len2
 		    	escribe msg2,len2
-		    	mov ebx,[temp2]
-		    	add ebx,'0'
-		    	mov [prueba],ebx
-		   		escribe prueba,8
-		   		mov eax,[width]
+
+		    	mov eax,[temp2]
 		    	add eax,'0'
 		    	mov [prueba],eax
 		   		escribe prueba,8
+
+		   		mov eax,[temp]
+		    	add eax,'0'
+		    	mov [prueba],eax
+		   		escribe prueba,8
+
 		   		escribe msg2,len2
 		   		escribe msg2,len2
 		   		escribe msg2,len2
 
-		   		mov ebx,[temp2]
-		   		mov ecx,[width]
+		   		;**********************************   CONDICIONALES COLUMNA0   **********************
+		   		mov eax,[posI]
+		    	cmp eax,0
+		    	jnz NoFil0 
+		    		;nos ubicamos en la comunma 0
+		    		; si es la columna cero continuamos los condicionales
+		    		escribe msgFila0,lenMsgFila0
+		    		;escribe msgColumna0,lenMsgColumna0
+		    		mov eax,[posJ]
+		    		cmp eax,0
+		    		jnz fil0Nocol0
+		    			escribe msgColumna0, lenMsgColumna0
+		    			;escribe msgFila0,lenMsgFila0
+		    			;*****************************codigo************************* 
 
-		    	cmp ebx,ecx
-		    	jnz NoFilaCero
-		    		; si es cero continuamos los condicionales
-		    		escribe msgcolumna0,lencolumna0
+
+		    			jmp finCompares
+		    		fil0Nocol0:
+		    			mov eax,[temp2]
+		    			cmp eax,1
+		    			jnz filaIntermediaCol0
+		    				escribe msgColumnaFinal,lenMsgColumnaFinal
+		    				;escribe msgFilaFinal, lenMsgFilaFinal
+		    				;***************************codigo**********************
+
+		    				jmp finCompares
+		    			filaIntermediaCol0:
+		    				escribe msgColumnaIntermedia,lenMsgColumnaIntermedia
+		    				;escribe msgFilaIntermedia,lenMsgFilaIntermedia
+		    				;***************************codigo**********************
 
 
-		    	NoFilaCero:
-				;escribe texto, 4
+		    				jmp finCompares
+		    	NoFil0:
+		    	;*********************************   FIN CONDICIONALES COLUMNA0   *******************
+
+				mov eax,[temp]
+				cmp eax,1
+				jnz noColumnaFinal
+					escribe msgFilaFinal,lenMsgFilaFinal
+					;escribe msgColumnaFinal, lenMsgColumnaFinal
+					mov eax,[posJ]
+					cmp eax,0
+					jnz colFinalNoFila0
+						escribe msgColumna0,lenMsgColumna0
+						;escribe msgFila0,lenMsgFila0
+		    			;*****************************codigo************************* 
+
+
+		    			jmp finCompares
+					colFinalNoFila0:
+						mov eax,[temp2]
+						cmp eax,1
+						jne filaIntermediaColFinal
+							escribe msgColumnaFinal,lenMsgColumnaFinal
+							;escribe msgFilaFinal, lenMsgFilaFinal
+		    				;***************************codigo**********************
+
+		    				jmp finCompares
+						filaIntermediaColFinal:
+							escribe msgColumnaIntermedia,lenMsgColumnaIntermedia
+							;escribe msgFilaIntermedia,lenMsgFilaIntermedia
+		    				;***************************codigo**********************
+
+
+		    				jmp finCompares
+				noColumnaFinal:
+					escribe msgFilaIntermedia,lenMsgFilaIntermedia
+					;escribe msgColumnaIntermedia,lenMsgFilaIntermedia
+					mov eax,[posJ]
+					cmp eax,0
+					jnz colInterNoFila0
+						escribe msgColumna0,lenMsgColumna0
+						;escribe msgFila0,lenMsgFila0
+		    			;*****************************codigo************************* 
+
+
+		    			jmp finCompares
+					colInterNoFila0:
+						mov eax,[temp2]
+						cmp eax,1
+						jnz filaIntermediaColInter
+							escribe msgColumnaFinal,lenMsgColumnaFinal
+							;escribe msgFilaFinal, lenMsgFilaFinal
+		    				;***************************codigo**********************
+
+		    				jmp finCompares
+						filaIntermediaColInter:
+							escribe msgColumnaIntermedia,lenMsgColumnaIntermedia
+							;escribe msgFilaIntermedia,lenMsgFilaIntermedia
+		    				;***************************codigo**********************
+
+
+		    				jmp finCompares
+
 
 				;escribeTxt [idarchivo],texto,3
 
 
-
+				finCompares:
 
 		    	mov ecx,[temp2]
 		    	dec ecx
