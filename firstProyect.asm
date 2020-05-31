@@ -311,28 +311,15 @@ _start:
 		   		mov eax,[posI]
 		    	cmp eax,0
 		    	jnz NoFil0 
-		    		;nos ubicamos en la comunma 0
-		    		; si es la columna cero continuamos los condicionales
+		    		;nos ubicamos en la fila 0
+		    		
 		    		escribe msgFila0,lenMsgFila0
 		    		mov eax,[posJ]
 		    		cmp eax,0
 		    		jnz fil0Nocol0
 		    			escribe msgColumna0, lenMsgColumna0
 		    			;*****************************codigo************************* 
-		    			;mov eax,[posI]
-		    			;mov ebx,[width]
-		    			;mul ebx
-		    			;add eax,[posJ]
-		    			;mov ebx,3
-		    			;mul ebx
-	   					;mov [readpointer],eax
-	   					;actualizarpuntero idpointer,[readpointer], 0
-		    			;mov eax,[posI]
-		    			;leeTxt [idpointer],texto,3
-	   					;escribe texto,3
-	   					;mov eax,[texto]
-	   					;mov [dato],eax
-	   					;elKevin mat11,dato,sumatoria
+		    			
 	   					;********************leemos el primer dato********************
 	   					mov eax, 0
 	   					mov [readpointer],eax
@@ -369,18 +356,66 @@ _start:
 	   					mov [dato],eax
 	   					elKevin mat22,dato,sumatoria
 	   					escribe msg2,len2
-
+	   					;*************************terminamos primer etapa*************
 		    			jmp finCompares
 		    		fil0Nocol0:
 		    			mov eax,[temp2]
 		    			cmp eax,1
-		    			jnz filaIntermediaCol0
+		    			jnz fil0ColInter
 		    				escribe msgColumnaFinal,lenMsgColumnaFinal
 		    				;escribe msgFilaFinal, lenMsgFilaFinal
-		    				;***************************codigo**********************
+		    				;***************************codigo************************
+		    				
+		    				;****************leemos dato izquierdo********************
+		    				mov eax,[width]
+		    				mov ebx,2
+		    				sub eax,ebx
+		    				mov ebx,3
+		    				mul ebx
+		    				mov [readpointer],eax
+	   						actualizarpuntero idpointer,[readpointer], 0
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat10,dato,sumatoria
+	   						escribe msg2,len2
+	   						;**********************leemos dato************************
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat11,dato,sumatoria
+	   						escribe msg2,len2
+	   						;***************leemos dato abajo izquierdo***************
+	   						mov eax,[width]
+	   						mov ebx,[width]
+	   						add eax,ebx
+	   						mov ebx,2
+	   						sub eax,ebx
+	   						mov ebx,3
+	   						mul ebx
+	   						mov [readpointer],eax
+	   						actualizarpuntero idpointer,[readpointer], 0
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat20,dato,sumatoria
+	   						escribe msg2,len2
+	   						;*********************leemos dato abajo*******************
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat21,dato,sumatoria
+	   						escribe msg2,len2
+	   						;*****************fin fila0 columna final*****************
+
+
 
 		    				jmp finCompares
-		    			filaIntermediaCol0:
+		    			fil0ColInter:
 		    				escribe msgColumnaIntermedia,lenMsgColumnaIntermedia
 		    				;escribe msgFilaIntermedia,lenMsgFilaIntermedia
 		    				;***************************codigo**********************
