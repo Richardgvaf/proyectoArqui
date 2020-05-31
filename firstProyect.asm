@@ -280,7 +280,7 @@ _start:
 		    	mov eax,[width]
 		    	sub eax,ecx
 		    	mov [posJ],eax
-
+		    	;escribe posJ,4
 		    	;*********************************************codigo ejecutable en el loop****************************
 		    	;escribe aster,lenAster
 		    	;escribeTxt [idarchivo],aster,lenAster
@@ -366,7 +366,7 @@ _start:
 		    				;escribe msgFilaFinal, lenMsgFilaFinal
 		    				;***************************codigo************************
 		    				
-		    				;****************leemos dato izquierdo********************
+		    				;*****************leemos dato izquierdo*********************
 		    				mov eax,[width]
 		    				mov ebx,2
 		    				sub eax,ebx
@@ -380,14 +380,14 @@ _start:
 	   						mov [dato],eax
 	   						elKevin mat10,dato,sumatoria
 	   						escribe msg2,len2
-	   						;**********************leemos dato************************
+	   						;**********************leemos dato***************************
 	   						leeTxt [idpointer],texto,3
 	   						escribe texto,3
 	   						mov eax,[texto]
 	   						mov [dato],eax
 	   						elKevin mat11,dato,sumatoria
 	   						escribe msg2,len2
-	   						;***************leemos dato abajo izquierdo***************
+	   						;***************leemos dato abajo izquierdo******************
 	   						mov eax,[width]
 	   						mov ebx,[width]
 	   						add eax,ebx
@@ -403,23 +403,78 @@ _start:
 	   						mov [dato],eax
 	   						elKevin mat20,dato,sumatoria
 	   						escribe msg2,len2
-	   						;*********************leemos dato abajo*******************
+	   						;*********************leemos dato abajo*********************
 	   						leeTxt [idpointer],texto,3
 	   						escribe texto,3
 	   						mov eax,[texto]
 	   						mov [dato],eax
 	   						elKevin mat21,dato,sumatoria
 	   						escribe msg2,len2
-	   						;*****************fin fila0 columna final*****************
-
-
+	   						;*****************fin fila0 columna final********************
 
 		    				jmp finCompares
 		    			fil0ColInter:
 		    				escribe msgColumnaIntermedia,lenMsgColumnaIntermedia
 		    				;escribe msgFilaIntermedia,lenMsgFilaIntermedia
-		    				;***************************codigo**********************
-
+		    				;***************************codigo***************************
+		    				mov eax,[posJ]
+		    				mov ebx,1
+		    				sub eax,ebx
+		    				mov ebx,3
+		    				mul ebx
+		    				mov [readpointer],eax
+		    				escribe readpointer,4
+	   						actualizarpuntero idpointer,[readpointer], 0
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat10,dato,sumatoria
+	   						escribe msg2,len2
+	   						;**********************leemos dato***************************
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat11,dato,sumatoria
+	   						escribe msg2,len2
+		    				;**********************leemos derecho************************
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat11,dato,sumatoria
+	   						escribe msg2,len2
+	   						;***************leemos el dato abajo izquierdo***************
+	   						mov eax,[posJ]
+	   						mov ebx,[width]
+	   						add eax,ebx
+	   						mov ebx,1
+	   						sub eax,ebx
+	   						mov ebx,3
+	   						mul ebx
+	   						mov [readpointer],eax
+	   						actualizarpuntero idpointer,[readpointer], 0
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat20,dato,sumatoria
+	   						escribe msg2,len2
+	   						;**********************leemos dato***************************
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat21,dato,sumatoria
+	   						escribe msg2,len2
+		    				;**********************leemos derecho************************
+	   						leeTxt [idpointer],texto,3
+	   						escribe texto,3
+	   						mov eax,[texto]
+	   						mov [dato],eax
+	   						elKevin mat22,dato,sumatoria
+	   						escribe msg2,len2
 
 		    				jmp finCompares
 		    	NoFil0:
