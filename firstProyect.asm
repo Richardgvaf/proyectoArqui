@@ -41,6 +41,40 @@ int 0x80
 	mov edx,%3
 	int 0x80
 %endmacro
+%macro elKevin 3
+
+	mov eax,[%1]
+	cmp eax,0
+	jbe %%kerPositivo
+		;escribe msg2,len2
+		mov eax,[%1]
+		mov ebx,-1
+		imul ebx
+		mov ebx,[%2]
+		sub ebx,'000'
+		mul ebx
+		mov ecx,[%3]
+		sub ecx,eax
+		mov [%3],ecx
+		add eax,'000'
+		jmp %%fin
+	%%kerPositivo:
+		mov eax,[%1]
+		mov ebx,[%2]
+		sub ebx,'000'
+		mul ebx
+		mov ecx,[%3]
+		add ecx,eax
+		mov [%3],ecx
+		add eax,'000'
+		;mov [result],eax
+		;escribe result,3
+
+	%%fin:
+	escribe %3, 3
+	escribe %3, 3
+
+%endmacro
 
 section .data 
 	;*************************************************mensajes*********************************************
@@ -69,13 +103,12 @@ section .data
 	;*****************************************nombre de archivos******************************************
 	archivo db "/home/richard/ensamblador/archivo.txt",0
 	archivo2 db "/home/richard/ensamblador/archivo2.txt",0
-	archivoLectura db "/home/richard/ensamblador/archivoLectura.txt",0
+	archivoLectura db "/home/richard/ensamblador/salidaImagen.txt",0
 
 
 section .bss
 	sumatoria resb 8
 	temp resb 8
-	;num2 resb 8
 	temp2 resb 8 
 	prueba resb 8
 	posI   resb 8
@@ -253,7 +286,9 @@ _start:
 		    	;escribeTxt [idarchivo],aster,lenAster
 		    	
 		    	;*********************************************condiciones para el calculo ****************************
-		    	
+		    	mov eax,'000'
+		    	mov [sumatoria],eax
+
 		    	escribe msg2,len2
 		    	escribe msg2,len2
 		    	escribe msg2,len2
@@ -279,14 +314,61 @@ _start:
 		    		;nos ubicamos en la comunma 0
 		    		; si es la columna cero continuamos los condicionales
 		    		escribe msgFila0,lenMsgFila0
-		    		;escribe msgColumna0,lenMsgColumna0
 		    		mov eax,[posJ]
 		    		cmp eax,0
 		    		jnz fil0Nocol0
 		    			escribe msgColumna0, lenMsgColumna0
-		    			;escribe msgFila0,lenMsgFila0
 		    			;*****************************codigo************************* 
-
+		    			;mov eax,[posI]
+		    			;mov ebx,[width]
+		    			;mul ebx
+		    			;add eax,[posJ]
+		    			;mov ebx,3
+		    			;mul ebx
+	   					;mov [readpointer],eax
+	   					;actualizarpuntero idpointer,[readpointer], 0
+		    			;mov eax,[posI]
+		    			;leeTxt [idpointer],texto,3
+	   					;escribe texto,3
+	   					;mov eax,[texto]
+	   					;mov [dato],eax
+	   					;elKevin mat11,dato,sumatoria
+	   					;********************leemos el primer dato********************
+	   					mov eax, 0
+	   					mov [readpointer],eax
+	   					actualizarpuntero idpointer,[readpointer], 0
+	   					leeTxt [idpointer],texto,3
+	   					escribe texto,3
+	   					mov eax,[texto]
+	   					mov [dato],eax
+	   					elKevin mat11,dato,sumatoria
+	   					escribe msg2,len2
+	   					;**********************leemos dato de la derecha**************
+	   					leeTxt [idpointer],texto,3
+	   					escribe texto,3
+	   					mov eax,[texto]
+	   					mov [dato],eax
+	   					elKevin mat12,dato,sumatoria
+	   					escribe msg2,len2
+	   					;**********************leemos dato de abajo ******************
+	   					mov eax, [width]
+	   					mov ebx,3
+	   					mul ebx
+	   					mov [readpointer],eax
+	   					actualizarpuntero idpointer,[readpointer], 0
+	   					leeTxt [idpointer],texto,3
+	   					escribe texto,3
+	   					mov eax,[texto]
+	   					mov [dato],eax
+	   					elKevin mat21,dato,sumatoria
+	   					escribe msg2,len2
+	   					;**********************leemos dato abajo derecha**************
+	   					leeTxt [idpointer],texto,3
+	   					escribe texto,3
+	   					mov eax,[texto]
+	   					mov [dato],eax
+	   					elKevin mat22,dato,sumatoria
+	   					escribe msg2,len2
 
 		    			jmp finCompares
 		    		fil0Nocol0:
